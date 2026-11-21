@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Meroo's anniversary" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#FAF7F2" />
+  <title>Meroo's anniversary</title>
+
+  <!-- أيقونة التطبيق على الشاشة الرئيسية -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%238C5E58'/><text x='50' y='66' font-size='52' text-anchor='middle' fill='%23FAF7F2'>🤍</text></svg>" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%238C5E58'/><text x='50' y='66' font-size='52' text-anchor='middle' fill='%23FAF7F2'>🤍</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --card: #FFFFFF;
+      --primary: #8C5E58;
+      --primary-light: #F3EAE8;
+      --text: #2E2927;
+      --muted: #7A6F6B;
+      --border: #EAE2DA;
+      --shadow: 0 10px 30px rgba(46, 41, 39, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* شاشة القفل */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 100;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #lock-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .lock-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px 24px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .lock-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .pass-input {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.15rem;
+      text-align: center;
+      letter-spacing: 4px;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .pass-input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .error-msg {
+      color: #C0392B;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+
+    /* المحتوى الرئيسي */
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.85rem;
+      color: var(--primary);
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px 20px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* العداد */
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .counter-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 6px;
+    }
+
+    .counter-num {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+      line-height: 1.2;
+    }
+
+    .counter-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .start-date-note {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    /* رسالة البداية */
+    .letter-text {
+      font-size: 0.98rem;
+      color: var(--text);
+      white-space: pre-line;
+      line-height: 1.9;
+    }
+
+    /* ألبوم الذكريات */
+    .memory-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .memory-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .memory-media {
+      width: 100%;
+      max-height: 360px;
+      object-fit: cover;
+      display: block;
+      background: #EFEAE4;
+    }
+
+    .memory-caption {
+      padding: 14px 16px;
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: var(--text);
+      text-align: center;
+    }
+
+    /* كروت افتحيها لما */
+    .open-when-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .envelope-btn {
+      background: var(--primary-light);
+      border: 1px dashed var(--primary);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: right;
+      font-family: inherit;
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .envelope-btn:active {
+      background: #E8DCD9;
+    }
+
+    /* نافذة الرسالة المنبثقة */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(46, 41, 39, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .modal-body {
+      font-size: 0.96rem;
+      color: var(--text);
+      line-height: 1.85;
+      margin-bottom: 16px;
+      white-space: pre-line;
+    }
+
+    .modal-media {
+      width: 100%;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- شاشة الباسورد -->
+  <div id="lock-screen">
+    <div class="lock-card">
+      <div class="brand-en">Meroo's anniversary</div>
+      <p class="lock-subtitle">اكتبي الباسورد عشان تفتحي مساحتنا الخاصة 🤍</p>
+      <input type="password" inputmode="numeric" id="password-input" class="pass-input" placeholder="•••••••" />
+      <button class="btn-primary" onclick="checkPassword()">دخول</button>
+      <div id="error-msg" class="error-msg"></div>
+    </div>
+  </div>
+
+  <!-- الصفحة الرئيسية -->
+  <main class="container" id="main-content">
+    <header>
+      <h1>Meroo's anniversary</h1>
+      <p>كل لحظة معاكِ بداية جديدة</p>
+    </header>
+
+    <!-- العداد المباشر -->
+    <section class="section-card">
+      <div class="section-title">⏳ حكايتنا بدأت من</div>
+      <div class="counter-grid">
+        <div class="counter-box">
+          <span class="counter-num" id="days">0</span>
+          <span class="counter-label">يوم</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num" id="hours">0</span>
+          <span class="counter-label">ساعة</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num" id="minutes">0</span>
+          <span class="counter-label">دقيقة</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num" id="seconds">0</span>
+          <span class="counter-label">ثانية</span>
+        </div>
+      </div>
+      <div class="start-date-note">من يوم 14 / 5 / 2025 ولحد آخر العمر</div>
+    </section>
+
+    <!-- رسالة البداية -->
+    <section class="section-card">
+      <div class="section-title">💌 رسالة من قلبي ليكِ</div>
+      <div class="letter-text">الي حصل مش حاجة بسيطه بس حاجة تعلمنا و تخلينا اقوى من الاول وانا اول حاجة اتعلمتها اني مقفلش و اسيب نفسي لدماغي ولا اسيبك لدماغك نتخانق احسن من اننا نقفل 
+نفسي بجد تسامحيني مش علي الي حصل مني بس لا علي كل حاجة انا عملتها زعلتك و ضايقتك 
+اكتشفت اني مليش غيرك فعلاً و الدليل انك لما مكنتيش معايا كنت بلفلف ف الشوارع و شبه عيل صغير و تايه او مجنون و الي بيجي قدامو بيعملو او بيدخل ف اي شارع المهم اني اكتشفت اني منغير عيل صغير و تاهه من امو 
+عايزك تسامحيني علي كل حصلت من اول ما عرفتيني عشان بجد انا هبدا معاكي صفحه جديده 
+ربنا يخليكي ليا ينور عيني و متحرمش منك ابدا 💋💋🫂🫂🫂🫂</div>
+    </section>
+
+    <!-- ألبوم الذكريات -->
+    <section class="section-card">
+      <div class="section-title">📸 ألبوم ذكرياتنا</div>
+
+      <!-- الذكرى 1: فيديو التشجيع -->
+      <div class="memory-item">
+        <video class="memory-media" controls playsinline preload="metadata">
+          <source src="video1.mp4" type="video/mp4" />
+          المتصفح لا يدعم تشغيل الفيديو.
+        </video>
+        <div class="memory-caption">التشجيع ✨</div>
+      </div>
+
+      <!-- الذكرى 2: أكتر صورة بحبها لينا -->
+      <div class="memory-item">
+        <img src="photo1.jpg" alt="أكتر صورة بحبها لينا" class="memory-media" />
+        <div class="memory-caption">أكتر صورة بحبها لينا 🤍</div>
+      </div>
+
+      <!-- الذكرى 3: وحشتيني -->
+      <div class="memory-item">
+        <img src="photo2.jpg" alt="وحشتيني" class="memory-media" />
+        <div class="memory-caption">وحشتيني 🫂</div>
+      </div>
+    </section>
+
+    <!-- كروت افتحيها لما -->
+    <section class="section-card">
+      <div class="section-title">✉️ افتحيها لما...</div>
+      <div class="open-when-grid">
+        <button class="envelope-btn" onclick="openCard(0)">
+          <span>افتحيها لما تكوني زعلانة مني</span>
+          <span>👈</span>
+        </button>
+        <button class="envelope-btn" onclick="openCard(1)">
+          <span>افتحيها لما أوحشك</span>
+          <span>👈</span>
+        </button>
+        <button class="envelope-btn" onclick="openCard(2)">
+          <span>افتحيها لما تحتاجي طاقة وتشجيع</span>
+          <span>👈</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="footer-note">Made with love just for you 🤍</div>
+  </main>
+
+  <!-- نافذة عرض الكارت -->
+  <div class="modal-backdrop" id="modal" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-title" id="modal-title"></div>
+      <img id="modal-img" class="modal-media" alt="" />
+      <video id="modal-video" class="modal-media" controls playsinline></video>
+      <div class="modal-body" id="modal-body"></div>
+      <button class="btn-primary" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+
+  <script>
+    const PASSCODE = "1452025";
+    const START_DATE = new Date("2025-05-14T00:00:00");
+
+    // محتوى كروت "افتحيها لما" (تقدر تعدل النصوص أو تضيف صور/فيديوهات ليها)
+    const cardsData = [
+      {
+        title: "لما تكوني زعلانة مني 🤍",
+        body: "حقك عليا في أي لحظة ضايقتك فيها. افتكري دايماً إني عمري ما أحب أشوفك زعلانة، وإني دايماً شاري رضاكِ ووجودك في حياتي بالدنيا كلها.",
+        mediaType: "", // اكتب "image" أو "video" لو حابب تضيف ملف
+        mediaSrc: ""   // اسم الملف مثلاً "card1.jpg" أو "card1.mp4"
+      },
+      {
+        title: "لما أوحشك 🫂",
+        body: "لو فتحتي الرسالة دي فاعرفي إني في نفس اللحظة دي بفكر فيكِ ومشتاقلك أكتر. ابعتيلي رسالة أو رني عليا فوراً!",
+        mediaType: "",
+        mediaSrc: ""
+      },
+      {
+        title: "لما تحتاجي طاقة وتشجيع ✨",
+        body: "أنا واثق فيكِ وفي شطارتك وقد إيه إنتي قد أي حاجة بتدخلي فيها. كملي وأنا دايماً في ضهرك وبشجعك من قلبي.",
+        mediaType: "",
+        mediaSrc: ""
+      }
+    ];
+
+    function checkPassword() {
+      const input = document.getElementById("password-input").value.trim();
+      const error = document.getElementById("error-msg");
+      if (input === PASSCODE) {
+        document.getElementById("lock-screen").classList.add("hidden");
+        document.getElementById("main-content").classList.add("visible");
+        error.textContent = "";
+      } else {
+        error.textContent = "الباسورد غلط.. جربي تاني يا روحي";
+      }
+    }
+
+    document.getElementById("password-input").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") checkPassword();
+    });
+
+    function updateCounter() {
+      const now = new Date();
+      const diff = Math.max(0, now - START_DATE);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    function openCard(index) {
+      const card = cardsData[index];
+      document.getElementById("modal-title").textContent = card.title;
+      document.getElementById("modal-body").textContent = card.body;
+
+      const imgEl = document.getElementById("modal-img");
+      const vidEl = document.getElementById("modal-video");
+      imgEl.style.display = "none";
+      vidEl.style.display = "none";
+      vidEl.pause();
+
+      if (card.mediaType === "image" && card.mediaSrc) {
+        imgEl.src = card.mediaSrc;
+        imgEl.style.display = "block";
+      } else if (card.mediaType === "video" && card.mediaSrc) {
+        vidEl.src = card.mediaSrc;
+        vidEl.style.display = "block";
+      }
+
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function closeModal() {
+      const vidEl = document.getElementById("modal-video");
+      vidEl.pause();
+      document.getElementById("modal").classList.remove("open");
+    }
+  </script>
+</body>
+</html>
